@@ -1,13 +1,21 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Nav from '../components/Nav';
 import axios from 'axios';
 import styled from 'styled-components';
 import useInput from '../hook/useInput';
+import { useRecoilState } from 'recoil';
+import { posts } from '../atom';
+import { useNavigate } from 'react-router-dom';
+
 const HomeOne = () => {
+  const navigate = useNavigate();
+
+  // 전역 데이터
+  const [post, setPost] = useRecoilState(posts);
   // code 데이터
-  const [regionData, setRegionData] = useState([]);
+  const [regionDatas, setRegionDatas] = useState([]);
   // product 데이터
-  const [productData, setProductData] = useState([]);
+  const [productDatas, setProductDatas] = useState([]);
   // input value
   const searchInput = useInput('');
   // 검색
@@ -20,6 +28,63 @@ const HomeOne = () => {
       console.log('오긴해?');
       alert('검색어를 입력해주세요.');
       return;
+    }
+
+    //키워드 검색 (검색어가 한글일 경우)
+    if (isKor) {
+      const foundResults = productDatas.filter(
+        (item) => item.name.split('_')[0] === value
+      );
+      if (foundResults.length === 0) {
+        alert('검색 결과가 없습니다.');
+        console.error('No data found.');
+        return;
+      }
+      setProductDatas(foundResults);
+      navigate(`/search?=keyword=${value}`);
+    } else {
+      //image_url 검색
+      if (value.includes('https')) {
+        //검색어와 일치하는 아이템
+        const matchedResult = regionDatas.filter(
+          (item) => item.image_url === value
+        );
+        if (matchedResult.length === 0) {
+          alert('검색 결과가 없습니다.');
+          console.error('No data found.');
+          return;
+        }
+        //검색어와 같은 카테고리의 아이템 목록
+        const similarResults = productDatas.filter(
+          (item) =>
+            item.category_names[0] === matchedResult[0].category_names[0] &&
+            item.category_names[1] === matchedResult[0].category_names[1] &&
+            item.category_names[2] === matchedResult[0].category_names[2]
+        );
+        setPost([...matchedResult, { similarResults }]);
+        navigate(`/search?=image_url=${value}`);
+      }
+      //product_code 검색
+      else if (!isNaN(value)) {
+        //검색어와 일치하는 아이템
+        const matchedResult = regionDatas.filter(
+          (item) => item.product_code == value
+        );
+        if (matchedResult.length === 0) {
+          alert('검색 결과가 없습니다.');
+          console.error('No data found.');
+          return;
+        }
+        //검색어와 같은 카테고리의 아이템 목록
+        const similarResults = productDatas.filter(
+          (item) =>
+            item.category_names[0] === matchedResult[0].category_names[0] &&
+            item.category_names[1] === matchedResult[0].category_names[1] &&
+            item.category_names[2] === matchedResult[0].category_names[2]
+        );
+        setPost([...matchedResult, { similarResults }]);
+        navigate(`/search?=product_code=${value}`);
+      }
     }
   };
 
@@ -41,19 +106,21 @@ const HomeOne = () => {
           const productResults = [...responses][0].data;
           const regionResults = [...responses][1].data;
 
-          setProductData(productResults);
-          setRegionData(regionResults);
+          setProductDatas(productResults);
+          setRegionDatas(regionResults);
         })
       )
       .catch((err) => alert(`에러 ${err}`));
   };
+  console.log(regionDatas);
+  console.log(productDatas);
 
   return (
     <Wrap>
       <Nav />
       <SubTitle>
         <Bold>Artificial Intelligence</Bold> <br />
-        PXL <Bold>Fashion</Bold> Viewer
+        <GrayTxt>PXL</GrayTxt> <Bold>Fashion</Bold> <GrayTxt>Viewer</GrayTxt>
       </SubTitle>
       <Search>
         <SearchBar
@@ -80,6 +147,9 @@ const SubTitle = styled.h2`
 `;
 const Bold = styled.span`
   font-weight: bold;
+`;
+const GrayTxt = styled.span`
+  color: gray;
 `;
 const Search = styled.div`
   display: flex;
