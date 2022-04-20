@@ -1,36 +1,41 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Loading from '../components/Loading';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { posts, postsSelector } from '../atom';
+import { counterState } from '../atom';
 import Nav from '../components/Nav';
 import Items from '../components/Items';
 import SearchPost from '../components/SearchPost';
 import styled from 'styled-components';
-const SearchView = () => {
-  const postData = useRecoilValue(postsSelector);
 
-  const item = postData[0];
-  const post = postData[1].similarResults;
-  console.log(postData);
+const SearchView = () => {
+  const [postParsists, setPostParsists] = useRecoilState(counterState);
+
+  const item = postParsists[0];
+  console.log(postParsists[1].similarResults, 'post 데이터');
+
+  const post = postParsists[1].similarResults;
+
   //로딩
   const [isLoading, setIsLoading] = useState(true);
   //검색어 타입이 키워드인지 코드/url인지 구분
-  const isKeyword = postData[1].hasOwnProperty('similarResults') ? false : true;
+  const isKeyword = postParsists[1].hasOwnProperty('similarResults')
+    ? false
+    : true;
   //검색 목록 개수
-  const totalLen = isKeyword ? postData.length : post.length;
+  const totalLen = isKeyword ? postParsists.length : post.length;
 
   //보여지는 포스트 개수
   const [postIndex, setPostIndex] = useState(30);
   //보여지는 포스트 목록 배열
   const showPosts = isKeyword
-    ? postData.filter((item, index) => index < postIndex)
+    ? postParsists.filter((item, index) => index < postIndex)
     : post.filter((item, index) => index < postIndex);
 
   return (
     <>
       {isLoading && <Loading />}
       <Nav />
-      {postData[0].name ? (
+      {postParsists[0].name ? (
         <MainContainer>
           {showPosts.map((post, index) => (
             <SearchPost

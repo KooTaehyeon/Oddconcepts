@@ -4,18 +4,19 @@ import axios from 'axios';
 import styled from 'styled-components';
 import useInput from '../hook/useInput';
 import { useRecoilState } from 'recoil';
-import { posts } from '../atom';
+import { posts, regionData, productData, counterState } from '../atom';
 import { useNavigate } from 'react-router-dom';
 
 const HomeOne = () => {
   const navigate = useNavigate();
 
   // 전역 데이터
-  const [post, setPost] = useRecoilState(posts);
+  const [postParsist, setPostParsist] = useRecoilState(counterState);
   // code 데이터
-  const [regionDatas, setRegionDatas] = useState([]);
+  const [regionDatas, setRegionDatas] = useRecoilState(regionData);
   // product 데이터
-  const [productDatas, setProductDatas] = useState([]);
+  const [productDatas, setProductDatas] = useRecoilState(productData);
+
   // input value
   const searchInput = useInput('');
   // 검색
@@ -61,7 +62,7 @@ const HomeOne = () => {
             item.category_names[1] === matchedResult[0].category_names[1] &&
             item.category_names[2] === matchedResult[0].category_names[2]
         );
-        setPost([...matchedResult, { similarResults }]);
+        setPostParsist([...matchedResult, { similarResults }]);
         navigate(`/search?=image_url=${value}`);
       }
       //product_code 검색
@@ -82,7 +83,7 @@ const HomeOne = () => {
             item.category_names[1] === matchedResult[0].category_names[1] &&
             item.category_names[2] === matchedResult[0].category_names[2]
         );
-        setPost([...matchedResult, { similarResults }]);
+        setPostParsist([...matchedResult, { similarResults }]);
         navigate(`/search?=product_code=${value}`);
       }
     }
