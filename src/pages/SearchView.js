@@ -11,7 +11,6 @@ const SearchView = () => {
   const [postParsists, setPostParsists] = useRecoilState(counterState);
 
   const item = postParsists[0];
-  console.log(postParsists[1].similarResults, 'post 데이터');
 
   const post = postParsists[1].similarResults;
 
@@ -32,7 +31,7 @@ const SearchView = () => {
     : post.filter((item, index) => index < postIndex);
 
   return (
-    <>
+    <All>
       {isLoading && <Loading />}
       <Nav />
       {postParsists[0].name ? (
@@ -65,11 +64,14 @@ const SearchView = () => {
           <MoreBtn onClick={() => setPostIndex(postIndex + 30)}>MORE</MoreBtn>
         </BtnContainer>
       )}
-    </>
+    </All>
   );
 };
+const All = styled.div`
+  overflow-x: hidden;
+`;
 const MainContainer = styled.div`
-  margin: 0 3em;
+  margin: 0 0.2em;
   width: 100%;
   display: flex;
   justify-content: left;
@@ -121,8 +123,8 @@ const Box = styled.div`
 `;
 
 const BtnContainer = styled.div`
-  position: relative;
-  left: 58%;
+  display: flex;
+  justify-content: center;
   margin: 50px 0px 100px;
 `;
 

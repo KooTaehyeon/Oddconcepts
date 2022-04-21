@@ -24,7 +24,7 @@ const HomeOne = () => {
     const value = searchInput.value;
     const korCheck = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
     const isKor = korCheck.test(value) ? true : false;
-
+    console.log(isKor, '한글');
     if (value === '') {
       console.log('오긴해?');
       alert('검색어를 입력해주세요.');
@@ -32,7 +32,7 @@ const HomeOne = () => {
     }
 
     //키워드 검색 (검색어가 한글일 경우)
-    if (isKor) {
+    if (isKor === true) {
       const foundResults = productDatas.filter(
         (item) => item.name.split('_')[0] === value
       );
@@ -41,7 +41,7 @@ const HomeOne = () => {
         console.error('No data found.');
         return;
       }
-      setProductDatas(foundResults);
+      setPostParsist(foundResults);
       navigate(`/search?=keyword=${value}`);
     } else {
       //image_url 검색
@@ -62,6 +62,7 @@ const HomeOne = () => {
             item.category_names[1] === matchedResult[0].category_names[1] &&
             item.category_names[2] === matchedResult[0].category_names[2]
         );
+
         setPostParsist([...matchedResult, { similarResults }]);
         navigate(`/search?=image_url=${value}`);
       }
@@ -83,6 +84,7 @@ const HomeOne = () => {
             item.category_names[1] === matchedResult[0].category_names[1] &&
             item.category_names[2] === matchedResult[0].category_names[2]
         );
+        console.log(matchedResult, '키워드');
         setPostParsist([...matchedResult, { similarResults }]);
         navigate(`/search?=product_code=${value}`);
       }
@@ -113,8 +115,6 @@ const HomeOne = () => {
       )
       .catch((err) => alert(`에러 ${err}`));
   };
-  console.log(regionDatas);
-  console.log(productDatas);
 
   return (
     <Wrap>
