@@ -15,7 +15,7 @@ export const postsSelector = selector({
     return getposts;
   },
 });
-
+// 검색어 강조 데이터
 export const text = atom({
   key: 'text',
   default: '',
@@ -45,12 +45,19 @@ export const canvasSelector = selector({
 });
 
 // 로컬 데이터
+// 1번문제 로컬
 export const counterState = atom({
   key: 'counterState',
   default: postsSelector,
   effects_UNSTABLE: [persistAtom],
 });
+export const textState = atom({
+  key: 'textState',
+  default: text,
+  effects_UNSTABLE: [persistAtom],
+});
 
+// 2번 문제 로컬
 export const canvasState = atom({
   key: 'canvasState',
   default: canvasSelector,

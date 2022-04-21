@@ -4,7 +4,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import useInput from '../hook/useInput';
 import { useRecoilState } from 'recoil';
-import { regionData, productData, counterState, text } from '../atom';
+import { regionData, productData, counterState, textState } from '../atom';
 import { useNavigate } from 'react-router-dom';
 
 const HomeOne = () => {
@@ -17,7 +17,7 @@ const HomeOne = () => {
   // product 데이터
   const [productDatas, setProductDatas] = useRecoilState(productData);
 
-  const [texts, setTexts] = useRecoilState(text);
+  const [texts, setTexts] = useRecoilState(textState);
 
   // input value
   const searchInput = useInput('');

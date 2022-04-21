@@ -1,13 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
-import { text } from '../atom';
+import { textState } from '../atom';
 const SearchPost = ({ post, setLoading }) => {
   const { image_url, name, price } = post;
   const number = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
   // 글자 강조
-  const texts = useRecoilValue(text);
+  const texts = useRecoilValue(textState);
   console.log(texts, '서치페이지 텍스트');
 
   const escapeRegExp = (str = '') =>
@@ -35,7 +35,6 @@ const SearchPost = ({ post, setLoading }) => {
           onLoad={() => setLoading(false)}
         />
         <ProductName>
-          {' '}
           <Highlight search={texts}>{name}</Highlight>
         </ProductName>
         <ProductPrice>{`₩ ${number}`}</ProductPrice>
