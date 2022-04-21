@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Loading from '../components/Loading';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { counterState } from '../atom';
+import { counterState, text } from '../atom';
 import Nav from '../components/Nav';
 import Items from '../components/Items';
 import SearchPost from '../components/SearchPost';
@@ -16,6 +16,9 @@ const SearchView = () => {
 
   //로딩
   const [isLoading, setIsLoading] = useState(true);
+  // 로딩중 행동막기
+  const loadingStyle = { position: 'fixed' };
+
   //검색어 타입이 키워드인지 코드/url인지 구분
   const isKeyword = postParsists[1].hasOwnProperty('similarResults')
     ? false
@@ -31,12 +34,12 @@ const SearchView = () => {
     : post.filter((item, index) => index < postIndex);
 
   return (
-    <All>
+    <All style={isLoading ? loadingStyle : null}>
       {isLoading && <Loading />}
       <Nav />
       {postParsists[0].name ? (
         <MainContainer>
-          {showPosts.map((post, index) => (
+          {showPosts.map((post) => (
             <SearchPost
               key={post.product_code}
               post={post}
@@ -48,7 +51,7 @@ const SearchView = () => {
         <Container>
           <Items item={item} />
           <Box>
-            {showPosts.map((post, index) => (
+            {showPosts.map((post) => (
               <SearchPost
                 key={post.product_code}
                 post={post}
@@ -58,7 +61,6 @@ const SearchView = () => {
           </Box>
         </Container>
       )}
-
       {totalLen >= postIndex && (
         <BtnContainer>
           <MoreBtn onClick={() => setPostIndex(postIndex + 30)}>MORE</MoreBtn>
@@ -68,7 +70,7 @@ const SearchView = () => {
   );
 };
 const All = styled.div`
-  overflow-x: hidden;
+  height: 100%;
 `;
 const MainContainer = styled.div`
   margin: 0 0.2em;

@@ -16,6 +16,10 @@ export const postsSelector = selector({
   },
 });
 
+export const text = atom({
+  key: 'text',
+  default: '',
+});
 // api 데이터
 
 export const regionData = atom({

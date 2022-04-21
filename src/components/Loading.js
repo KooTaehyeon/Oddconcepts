@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const Loading = () => {
   const LodingModal = styled.div`
@@ -30,7 +30,7 @@ const Loading = () => {
     animation-duration: 0.8s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
-
+    overflow: hidden;
     @keyframes spinCircle {
       from {
         transform: translate(-50%, -50%) rotate(0);

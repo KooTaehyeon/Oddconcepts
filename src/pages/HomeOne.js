@@ -4,7 +4,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import useInput from '../hook/useInput';
 import { useRecoilState } from 'recoil';
-import { posts, regionData, productData, counterState } from '../atom';
+import { regionData, productData, counterState, text } from '../atom';
 import { useNavigate } from 'react-router-dom';
 
 const HomeOne = () => {
@@ -17,11 +17,14 @@ const HomeOne = () => {
   // product 데이터
   const [productDatas, setProductDatas] = useRecoilState(productData);
 
+  const [texts, setTexts] = useRecoilState(text);
+
   // input value
   const searchInput = useInput('');
   // 검색
   const search = () => {
     const value = searchInput.value;
+
     const korCheck = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
     const isKor = korCheck.test(value) ? true : false;
     console.log(isKor, '한글');
@@ -41,7 +44,13 @@ const HomeOne = () => {
         console.error('No data found.');
         return;
       }
+      foundResults.sort(
+        (a, b) =>
+          Number(a.name.match(/(\d+)/g)) - Number(b.name.match(/(\d+)/g))
+      );
+      setTexts(value);
       setPostParsist(foundResults);
+
       navigate(`/search?=keyword=${value}`);
     } else {
       //image_url 검색
@@ -63,6 +72,7 @@ const HomeOne = () => {
             item.category_names[2] === matchedResult[0].category_names[2]
         );
 
+        setTexts(value);
         setPostParsist([...matchedResult, { similarResults }]);
         navigate(`/search?=image_url=${value}`);
       }
@@ -84,13 +94,12 @@ const HomeOne = () => {
             item.category_names[1] === matchedResult[0].category_names[1] &&
             item.category_names[2] === matchedResult[0].category_names[2]
         );
-        console.log(matchedResult, '키워드');
+        setTexts(value);
         setPostParsist([...matchedResult, { similarResults }]);
         navigate(`/search?=product_code=${value}`);
       }
     }
   };
-
   // api
   useEffect(() => {
     callData();

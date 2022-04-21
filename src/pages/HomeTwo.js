@@ -42,9 +42,9 @@ const HomeTwo = () => {
   }
   // 드래그 이벤트 종료
   function drawEnd(e) {
-    setIsDraw(false);
     let confirmText = prompt('영역의 이름은 무엇인가요?');
     let endXY = [e.clientX, e.clientY];
+    setIsDraw(false);
 
     setData([
       ...data,

@@ -56,7 +56,7 @@ const ItemsContainer = styled.div`
   position: absolute;
   left: 1.5em;
   box-shadow: 5px 5px 7px 0px rgba(217, 217, 217, 1);
-
+  overflow: hidden;
   @media screen and (max-width: 35rem) {
     margin: 0 1em;
     width: 19.5em;

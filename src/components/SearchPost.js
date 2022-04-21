@@ -1,8 +1,31 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useRecoilValue } from 'recoil';
+import { text } from '../atom';
 const SearchPost = ({ post, setLoading }) => {
   const { image_url, name, price } = post;
   const number = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  // 글자 강조
+  const texts = useRecoilValue(text);
+  console.log(texts, '서치페이지 텍스트');
+
+  const escapeRegExp = (str = '') =>
+    str.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
+
+  const Highlight = ({ search = '', children = '' }) => {
+    const patt = new RegExp(`(${escapeRegExp(search)})`, 'i');
+    const parts = String(children).split(patt);
+
+    if (search) {
+      return parts.map((part, index) =>
+        patt.test(part) ? <mark key={index}>{part}</mark> : part
+      );
+    } else {
+      return children;
+    }
+  };
+
   return (
     <MainContainer>
       <Link href={image_url} target='_blank'>
@@ -11,7 +34,10 @@ const SearchPost = ({ post, setLoading }) => {
           alt='제품 이미지'
           onLoad={() => setLoading(false)}
         />
-        <ProductName>{name}</ProductName>
+        <ProductName>
+          {' '}
+          <Highlight search={texts}>{name}</Highlight>
+        </ProductName>
         <ProductPrice>{`₩ ${number}`}</ProductPrice>
       </Link>
     </MainContainer>
@@ -24,7 +50,7 @@ const MainContainer = styled.div`
   box-shadow: 5px 5px 7px 0px rgba(217, 217, 217, 1);
   margin: 1vh;
   transition: 0.3s;
-
+  overflow: hidden;
   :hover {
     cursor: pointer;
     transform: translateY(-10px);
