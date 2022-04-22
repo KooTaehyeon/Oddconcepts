@@ -21,7 +21,6 @@ export const text = atom({
   default: '',
 });
 // api 데이터
-
 export const regionData = atom({
   key: 'regionData',
   default: [],
@@ -30,18 +29,6 @@ export const regionData = atom({
 export const productData = atom({
   key: 'productData',
   default: [],
-});
-// 캔버스
-export const canvasData = atom({
-  key: 'canvasData',
-  default: [],
-});
-export const canvasSelector = selector({
-  key: 'canvasSelector',
-  get: ({ get }) => {
-    const getcanvas = get(canvasData);
-    return getcanvas;
-  },
 });
 
 // 로컬 데이터
@@ -54,12 +41,5 @@ export const counterState = atom({
 export const textState = atom({
   key: 'textState',
   default: text,
-  effects_UNSTABLE: [persistAtom],
-});
-
-// 2번 문제 로컬
-export const canvasState = atom({
-  key: 'canvasState',
-  default: canvasSelector,
   effects_UNSTABLE: [persistAtom],
 });

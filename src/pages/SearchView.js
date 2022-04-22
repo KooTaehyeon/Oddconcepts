@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Loading from '../components/Loading';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { counterState } from '../atom';
 import Nav from '../components/Nav';
 import Items from '../components/Items';

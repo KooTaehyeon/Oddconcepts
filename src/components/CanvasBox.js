@@ -13,7 +13,6 @@ const Itemdiv = styled.div`
 `;
 
 function CanvasBox(props) {
-  console.log(props);
   return (
     <>
       <Itemdiv x={props.x} y={props.y} w={props.w} h={props.h}>

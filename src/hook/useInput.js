@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 // 인풋창 핸들링하는 커스텀훅
 

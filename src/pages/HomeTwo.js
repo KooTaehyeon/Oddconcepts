@@ -1,13 +1,20 @@
-import React, { createRef, useRef, useState, useEffect } from 'react';
+import React, { createRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import img from '../assets/can.jpg';
-import useInput from '../hook/useInput';
 import CanvasBox from '../components/CanvasBox';
-import { canvasState } from '../atom';
-import { useRecoilState } from 'recoil';
+import { setItems } from '../util/LocalStorage';
+import { getItems } from '../util/LocalStorage';
 const HomeTwo = () => {
   // Box생성 데이터
-  const [data, setData] = useRecoilState(canvasState);
+  const [dataSet, setDataSet] = useState([]);
+  useEffect(() => {
+    const data = getItems('item');
+    if (data) {
+      setDataSet(data);
+    }
+  }, []);
+
+  console.log(dataSet);
 
   // 캔버스
   let canvasRef = createRef();
@@ -45,9 +52,9 @@ const HomeTwo = () => {
     let confirmText = prompt('영역의 이름은 무엇인가요?');
     let endXY = [e.clientX, e.clientY];
     setIsDraw(false);
-
-    setData([
-      ...data,
+    setPosId(posId + 1);
+    setDataSet([
+      ...dataSet,
       {
         id: posId,
         x: pos[0],
@@ -57,27 +64,44 @@ const HomeTwo = () => {
         text: confirmText,
       },
     ]);
+    setItems(dataSet);
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-    setPosId(posId + 1);
   }
   // 지우기
   const onRemove = (id) => {
-    const deleted = data.filter((item) => item.id !== id);
-    setData(deleted);
+    const deleted = dataSet.filter((item) => item.id !== id);
+    setDataSet(deleted);
+    setItems(dataSet);
   };
-  console.log('빨간색', pos);
-  console.log(data, '데이터');
+  // name 수정
+  const textEdit = (id) => {
+    console.log(id);
+    let confirmTexts = prompt('영역의 이름을 수정해주세요');
+    const updata = [...dataSet];
+    const edit = updata.map((item) => {
+      console.log(item.text);
+      if (item.id === id) {
+        item.text = confirmTexts;
+        return item;
+      }
+      return item;
+    });
+    setDataSet(edit);
+    setItems(dataSet);
+  };
+
   return (
     <Section>
-      {data.map((element, index) => (
-        <CanvasBox
-          key={index}
-          x={element.x}
-          y={element.y}
-          w={element.width}
-          h={element.height}
-          name={element.text}
-        />
+      {dataSet.map((element, index) => (
+        <div onClick={() => textEdit(element.id)} key={index}>
+          <CanvasBox
+            x={element.x}
+            y={element.y}
+            w={element.width}
+            h={element.height}
+            name={element.text}
+          />
+        </div>
       ))}
       <Canvas
         ref={canvasRef}
@@ -88,8 +112,8 @@ const HomeTwo = () => {
         onMouseUp={drawEnd}
       />
       <SelectorName>
-        {data.map((element, index) => (
-          <p key={element.id}>
+        {dataSet.map((element, index) => (
+          <p key={index}>
             {' '}
             {element.text}
             <span onClick={() => onRemove(element.id)}> X </span>
