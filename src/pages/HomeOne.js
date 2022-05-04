@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Nav from '../components/Nav';
 import axios from 'axios';
 import styled from 'styled-components';
@@ -16,9 +16,7 @@ const HomeOne = () => {
   const [regionDatas, setRegionDatas] = useRecoilState(regionData);
   // product 데이터
   const [productDatas, setProductDatas] = useRecoilState(productData);
-
   const [texts, setTexts] = useRecoilState(textState);
-
   // input value
   const searchInput = useInput('');
   // 검색

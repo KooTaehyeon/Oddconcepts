@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { textState } from '../atom';
 const SearchPost = ({ post, setLoading }) => {
@@ -8,7 +8,6 @@ const SearchPost = ({ post, setLoading }) => {
 
   // 글자 강조
   const texts = useRecoilValue(textState);
-  console.log(texts, '서치페이지 텍스트');
 
   const escapeRegExp = (str = '') =>
     str.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
@@ -19,7 +18,11 @@ const SearchPost = ({ post, setLoading }) => {
 
     if (search) {
       return parts.map((part, index) =>
-        patt.test(part) ? <mark key={index}>{part}</mark> : part
+        patt.test(part) ? (
+          <HighlightText key={index}>{part}</HighlightText>
+        ) : (
+          part
+        )
       );
     } else {
       return children;
@@ -81,6 +84,56 @@ const Link = styled.a`
   :visited {
     color: black;
   }
+`;
+const title = keyframes`
+0% {
+  color: #000000;
+}
+
+10% {
+  color: #8a39e1;
+  font-weight: bold;
+
+}
+20%{
+  color: #000000;
+}
+
+30% {
+  color: #8a39e1;
+  font-weight: bold;
+}
+40% {
+  color: #000000;
+}
+50% {
+  color: #8a39e1;
+  font-weight: bold;
+
+}
+60%{
+  color: #000000;
+}
+
+70% {
+  color: #8a39e1;
+  font-weight: bold;
+}
+80% {
+  color: #000000;
+}
+90% {
+  color: #8a39e1;
+  font-weight: bold;
+}
+100% {
+  color: #000000;
+}
+`;
+const HighlightText = styled.span`
+  color: #8a39e1;
+
+  animation: ${title} 7s infinite;
 `;
 
 export default SearchPost;

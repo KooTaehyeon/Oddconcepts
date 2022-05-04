@@ -7,15 +7,6 @@ import { getItems } from '../util/LocalStorage';
 const HomeTwo = () => {
   // Box생성 데이터
   const [dataSet, setDataSet] = useState([]);
-  useEffect(() => {
-    const data = getItems('item');
-    if (data) {
-      setDataSet(data);
-    }
-  }, []);
-
-  console.log(dataSet);
-
   // 캔버스
   let canvasRef = createRef();
   // // 영역 설정
@@ -25,8 +16,14 @@ const HomeTwo = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     setCtx(canvas.getContext('2d'));
+    // 로컬
+    const data = getItems('item');
+    if (data) {
+      setDataSet(data);
+    }
   }, []);
-  const [posId, setPosId] = useState(0);
+  const date = new Date();
+
   const [pos, setPos] = useState({});
   const [isDraw, setIsDraw] = useState(false);
 
@@ -49,37 +46,42 @@ const HomeTwo = () => {
   }
   // 드래그 이벤트 종료
   function drawEnd(e) {
-    let confirmText = prompt('영역의 이름은 무엇인가요?');
-    let endXY = [e.clientX, e.clientY];
     setIsDraw(false);
-    setPosId(posId + 1);
-    setDataSet([
+    let confirmText = prompt('영역의 이름은 무엇인가요?');
+    if (confirmText === null) {
+      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      return;
+    }
+    let endXY = [e.clientX, e.clientY];
+
+    const produce = [
       ...dataSet,
       {
-        id: posId,
+        id: date,
         x: pos[0],
         y: pos[1],
         width: endXY[0] - pos[0],
         height: endXY[1] - pos[1],
         text: confirmText,
       },
-    ]);
-    setItems(dataSet);
+    ];
+
+    setDataSet(produce);
+    setItems(produce);
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
   }
   // 지우기
   const onRemove = (id) => {
     const deleted = dataSet.filter((item) => item.id !== id);
     setDataSet(deleted);
-    setItems(dataSet);
+    setItems(deleted);
   };
-  // name 수정
+  // 영역 수정
   const textEdit = (id) => {
-    console.log(id);
     let confirmTexts = prompt('영역의 이름을 수정해주세요');
+    if (confirmTexts === null) return;
     const updata = [...dataSet];
     const edit = updata.map((item) => {
-      console.log(item.text);
       if (item.id === id) {
         item.text = confirmTexts;
         return item;
@@ -87,7 +89,7 @@ const HomeTwo = () => {
       return item;
     });
     setDataSet(edit);
-    setItems(dataSet);
+    setItems(edit);
   };
 
   return (
